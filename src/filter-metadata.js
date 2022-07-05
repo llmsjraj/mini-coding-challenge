@@ -22,6 +22,40 @@ type Metadata = {
  * @returns {Metadata[]} - An array of Metadata objects that match the given search query
  */
 export default function filterMetadata(metadata, query) {
-  // TODO: delete and replace this with your code
-  return metadata;
+  const results = [];
+  if (!metadata || (typeof query === "undefined" && query === null)) {
+    return results;
+  }
+  if (
+    !(typeof query === "string" || query instanceof String) ||
+    !(metadata instanceof Array)
+  ) {
+    return results;
+  }
+
+  const toSearch = query.replace(/-/gi, ",").replace(/[^a-zA-Z ,]/gi, "");
+  const regexList = [];
+  const searchWords = toSearch.split(/[ ,]+/);
+  searchWords.forEach((word) => {
+    regexList.push(new RegExp(word, "i"));
+  });
+
+  metadata.forEach((obj) => {
+    let matched = false;
+    Object.keys(obj).forEach((key) => {
+      if (obj[key] !== null) {
+        regexList.forEach((re) => {
+          if (re.test(`${obj[key]}`.replace(/[^\w\s]/gi, ""))) {
+            matched = true;
+          }
+        });
+      }
+    });
+    if (matched) {
+      results.push(obj);
+      matched = false;
+    }
+  });
+
+  return results;
 }

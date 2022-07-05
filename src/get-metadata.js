@@ -23,13 +23,67 @@ type Metadata = {
  * @returns A Metadata object with data from the HTML <head>
  */
 export default function getMetadata(html) {
-  // TODO: delete and replace this with your code
+  let url = null;
+  let siteName = null;
+  let title = null;
+  let description = null;
+  let keywords = null;
+  let author = null;
+  if (!html || !(typeof html === "string" || html instanceof String)) {
+    return {
+      url,
+      siteName,
+      title,
+      description,
+      keywords,
+      author,
+    };
+  }
+  const regexUrl = html.match(/<meta\s+property="og:url"\s+content="(.*)"/i);
+  const regexSiteName = html.match(
+    /<meta\s+property="og:site_name"\s+content="(.*)"/i
+  );
+  const regexTitle = html.match(/<title>(.*)<\/title>/i);
+  const regexDescription = html.match(
+    /<meta\s+property="og:description"\s+content="(.*)"/i
+  );
+  const regexDescription1 = html.match(
+    /<meta\s+name="description"\s+content="(.*)"/i
+  );
+  const regexKeywords = html.match(/<meta\s+name="keywords"\s+content="(.*)"/i);
+  const regexAuthor = html.match(/<meta\s+name="author"\s+content="(.*)"/i);
+  if (regexUrl) {
+    url = regexUrl[1] || "";
+  }
+  if (regexSiteName) {
+    siteName = regexSiteName[1] || "";
+  }
+  if (regexTitle) {
+    title = regexTitle[1] || "";
+  }
+  if (regexDescription) {
+    description = regexDescription[1] || "";
+  }
+  if (regexDescription1) {
+    description = regexDescription1[1] || "";
+  }
+  if (regexKeywords) {
+    keywords = regexKeywords[1] || "";
+  }
+  if (regexAuthor) {
+    author = regexAuthor[1] || "";
+  }
+  if (keywords === "") {
+    keywords = [];
+  } else if (keywords != null) {
+    keywords = keywords.split(",");
+  }
   return {
-    url: "https://www.example.com/something/to-test",
-    siteName: "Example Site Name",
-    title: "Example Title",
-    description: "Example description.",
-    keywords: ["example", "keywords"],
-    author: "Example Author",
+    url,
+    siteName,
+    title,
+    description,
+    keywords,
+    author,
   };
 }
